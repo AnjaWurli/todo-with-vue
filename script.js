@@ -43,5 +43,10 @@ Vue.createApp({
         this.error = "tooShort";
       }
     },
+    remove() {
+      this.todos = this.todos.filter((todo) => {
+        return todo.done === false;
+      });
+    },
   },
 }).mount("#app");
