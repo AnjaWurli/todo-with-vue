@@ -24,7 +24,7 @@ Vue.createApp({
     },
   },
   methods: {
-    addTodo() {
+    async addTodo() {
       this.error = "";
 
       this.todos.forEach((todo) => {
@@ -33,20 +33,38 @@ Vue.createApp({
         }
       });
       if (this.newTodo.length >= 5 && this.error !== "double") {
-        this.todos.push({
-          id: +new Date(),
+        const newEntry = {
           description: this.newTodo,
           done: false,
+        };
+
+        const response = await fetch("http://localhost:4730/todos", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(newEntry),
         });
+        const data = await response.json();
+        this.todos.push(data);
+
         this.newTodo = "";
       } else if (this.newTodo.length < 5) {
         this.error = "tooShort";
       }
     },
-    remove() {
-      this.todos = this.todos.filter((todo) => {
-        return todo.done === false;
-      });
+    async remove() {
+      for (let i = this.todos.length - 1; i >= 0; i--) {
+        if (this.todos[i].done === true) {
+          await fetch(`http://localhost:4730/todos/${this.todos[i].id}`, {
+            method: "DELETE",
+          });
+          this.todos.splice(i, 1);
+        }
+      }
     },
+  },
+  async created() {
+    const response = await fetch("http://localhost:4730/todos");
+    const data = await response.json();
+    this.todos = data;
   },
 }).mount("#app");
