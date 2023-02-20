@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo App with Vue</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Todo App</h1>
+    </header>
+    <main id="app">
+        <form>
+            <input type="text" id="user-input" placeholder="Get sh*t done!" v-model="newTodo">
+            <button @click.prevent="addTodo">Add</button>
+
+        </form>
+        <span v-if="error==='tooShort'">Your input is too short. Use at least 5 characters</span>
+        <span v-else-if="error==='double'">This To-Do is already there</span>
+        <section>
+            <h2 id="heading-filter">Filter & Options</h2>
+            <ul id="filter-list">
+                <li @click="currentFilter=''">
+                    <input type="radio" class="filter" id="all" name="filter" checked>
+                    <label for="all">
+                        All
+                    </label>
+                </li>
+                <li @click="currentFilter='open'">
+                    <input type="radio" class="filter" id="open" name="filter">
+                    <label for="open">
+                        Open
+                    </label>
+                </li>
+                <li @click="currentFilter='done'">
+                    <input type="radio" class="filter" id="done" name="filter">
+                    <label for="done">
+                        Done
+                    </label>
+
+                </li>
+            </ul>
+            <button id="remove">Remove Done Todos</button>
+        </section>
+        <section>
+            <h2>Your Todos</h2>
+            <ul id="todo-list">
+                <li v-for="todo of filterElements" class="yours">
+                    <input class="todo" type="checkbox" v-model="todo.done" :id="todo" />
+                    <label :for="todo">{{todo.description}}</label>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
